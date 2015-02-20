@@ -1,2 +1,2 @@
 # OdinMotorio
-Sistema motorio bioispirato basato su una architettura ibrida Idra-Odin
+Sistema motorio bioispirato basato su architettura Idra-Odin
