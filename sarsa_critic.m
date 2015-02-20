@@ -25,6 +25,7 @@ function [ t,z ] = sarsa_critic( x,a,r,y,a1,t,z )
 
 %   Inizializzazioni
 g=0.9; % Valuto la policy quindi sono nell'area dei gangli con discount alto.
+%   g=0;  Valuto il goal quindi sono nell'area dei gangli con discount basso.
 l=1; % Implemento Td(1), comportamente stile MonteCarlo. 
 alpha=0.2; %trovare un parametro giusto. 
 

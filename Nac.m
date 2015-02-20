@@ -1,4 +1,4 @@
-function [ w,z,a1,y ] = Nac( w,t,a,z,x)
+function [ w,t,a1,z ] = Nac( w,t,a,z,x,y,r )
 %NAC Algoritmo Natural Actor-Critic, restituisce il vettore dei pesi della
 %policy. Ogni chiamata a questa funzione è una iterazione dell'algoritmo.
 %   Critico: Sarsa(1)
@@ -20,7 +20,7 @@ function [ w,z,a1,y ] = Nac( w,t,a,z,x)
 %   w=0; t=0; z=0;
 
 %   Inizializzazioni
-b=0.5; %trovare un parametro giusto
+b=0.5; %trovare un valore corretto, vedi sopra.
 %   SIGMA = ;  Direi di inizializzarlo a beta*I matrice costante.
 
 %   Esegue l'azione e riceve il reward e lo stato successivo
@@ -37,7 +37,7 @@ a1 = mvnrnd(w'*basis_actor(y),SIGMA);
 w = w + b*t;
 
 %   Aggiorno lo stato corrente e la prossima azione da eseguire
-x=y;
+%   x=y; lo faccio nel modulo esterno gangli.
 a=a1;
 
 
