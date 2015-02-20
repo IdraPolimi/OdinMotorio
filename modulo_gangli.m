@@ -1,6 +1,11 @@
 function [ pi_f ] = modulo_gangli( x )
-%MODULO_GANGLI Summary of this function goes here
-%   Detailed explanation goes here
+%MODULO_GANGLI Modulo che rappresenta i gangli alla base.
+%   Dato uno stato x apprende per rinforzo l'azione migliore da compiere.
+%   L'azione è una combinazione di primitive motorie e l'algoritmo si 
+%   occupa di imparare i pesi delle primitive che rappresentano la gating
+%   network di una "mixture" di esperti (le primitive).
+%   L'algoritmo di RL è Natural actor-critic con Sarsa(1) modificato per
+%   questo modello del sistema.
 
 %   Variabili
 %   x: vettore distanza dai cluster. Immagino che sia colonna, dipende
