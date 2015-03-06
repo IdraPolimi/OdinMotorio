@@ -1,21 +1,21 @@
-function [ ris ] = basis_metap( s,a,b )
-%BASIS_METAP Calcola le basis function della state value function dei
-%metaparametri
-%   Restituisce vettore colonna delle basis function della state value
-%   function dei metaparamentri per un valore di s.
+function [ mu,SIGMA,num_basis_metap ] = basis_metap( a,b )
+%BASIS_METAP Calcola i centri, le varianze e il numero delle basis function
+%della state value function dei metaparametri.
 
 %   Variabili:
-%   s: stato corrente. vettore riga.
-%   ris: vettore colonna delle basis function in s.
-%   a,b: estremi dell'intervallo dei metaparametri.
+%   a,b: vettori riga, estremi dell'intervallo dei metaparametri.
 %   n: numero di intervalli
-%   c: vettore colonna centri gaussiane.
+%   m: numero di metaparametri
+%   c: vettore n*m centri gaussiane.
 
 %   Inizializzazioni
 n = 3;
 intervallo = (b-a)/n;
-m=size(s,2);
-SIGMA=1; %aggiustare la varianza
+m=size(a,2);
+SIGMA=1*ones(1,m); %aggiustare la varianza
+num_basis_metap=n^m;
+mu=zeros(num_basis_metap,m);
+c=zeros(n,m);
 %   Discretizzo i range dei metaparametri per calcolare i poi i centri,
 %   per ogni Dof j che corrispondono alle colonne di a,b.
 %   Regular grid.
@@ -46,11 +46,13 @@ for j=1:m
     end    
 end
 
-%   Calcolo il valore delle basis function
-ris=zeros(n^m);
-for k=1:n^m
-    ris(k,1) = mvnpdf(x',mu(k,:),SIGMA);
-end
+
+% %   Il calcolo lo eseguo nella funzione chiamante.
+% %   Calcolo il valore delle basis function
+% ris=zeros(n^m);
+% for k=1:n^m
+%     ris(k,1) = mvnpdf(x',mu(k,:),SIGMA);
+% end
 
 end
 

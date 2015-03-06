@@ -10,16 +10,16 @@ function [ f ] = basis_actor( x )
 %   f: vettore colonna risultato delle basis functions
 %   x: vettore colonna distanze dai cluster dello stato
 
-%   Inizializzo media e varianza delle gaussiane
-%   MU= ;
-%   SIGMA= ;  Le devo recuperare da Idra/Odin quando faccio i test.
+%   media e varianza delle gaussiane
 global NUM_PRIMITIVE
+global MU_ACTOR
+global SIGMA_ACTOR
 
 %   Calcolo la gaussiana multivariata, immaginando che vettore x sia
 %   vettore colonna lo devo trasporre.
     f = zeros(NUM_PRIMITIVE,1);
 for i=1:NUM_PRIMITIVE
-    f(i) = mvnpdf(x',MU(i),SIGMA);
+    f(i,1) = mvnpdf(x',MU_ACTOR(i,:),SIGMA_ACTOR);
 end
 
 

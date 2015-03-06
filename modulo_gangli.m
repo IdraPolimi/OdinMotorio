@@ -1,4 +1,4 @@
-function [ pi_f ] = modulo_gangli( x )
+function [ w,t,pi_pesi,z ] = modulo_gangli( x,y,r,w,t,pi_pesi,z )
 %MODULO_GANGLI Modulo che rappresenta i gangli alla base.
 %   Dato uno stato x apprende per rinforzo l'azione migliore da compiere.
 %   L'azione è una combinazione di primitive motorie e l'algoritmo si 
@@ -10,7 +10,7 @@ function [ pi_f ] = modulo_gangli( x )
 %   Variabili
 %   x: vettore distanza dai cluster. Immagino che sia colonna, dipende
 %   dall'architettura Odin-Idra
-%   pi_f: vettore d dimensioni DoFx3 della policy finale a seguito della
+%   pi_f: vettore di dimensioni DoFx3 della policy finale a seguito della
 %   combinazione delle primitive motorie.
 %   pi_pesi: vettore colonna dei pesi corrispondenti alle primitive. I pesi
 %   appartengono a [0,1] e sono le azioni delle policy apprese con Nac.
@@ -28,57 +28,60 @@ function [ pi_f ] = modulo_gangli( x )
 
 global NUM_PRIMITIVE
 
-%   Inizializzazioni
-w = zeros(NUM_PRIMITIVE);
-t = zeros(NUM_PRIMITIVE);
-z = zeros(NUM_PRIMITIVE);
+%   Tutto il codice commentato sotto lo eseguo gia nel chiamante con alcune
+%    modifiche.
 
-%   Sceglie i pesi delle primitive per la prima iterazione del Nac. Le
-%   azioni/pesi ammissibili sono compresi nell'intervallo [0,1].
-%   Inizialmente viene eseguita solo una primitiva, quella più consona allo
-%   stato x osservato.
-pi_pesi=zeros(size(x,1),1);
-[elemento,posizione]=min(x);
-pi_pesi(posizione)=1;
+% %   Inizializzazioni
+% w = zeros(NUM_PRIMITIVE);
+% t = zeros(NUM_PRIMITIVE);
+% z = zeros(NUM_PRIMITIVE);
 
-%   Calcolo la combinazione di primitive.
-for i=1:NUM_PRIMITIVE
-    pi_f = pi_f + pi_pesi(i)*pi_base(i,x);
-end
+% %   Sceglie i pesi delle primitive per la prima iterazione del Nac. Le
+% %   azioni/pesi ammissibili sono compresi nell'intervallo [0,1].
+% %   Inizialmente viene eseguita solo una primitiva, quella più consona allo
+% %   stato x osservato.
+% pi_pesi=zeros(size(x,1),1);
+% [elemento,posizione]=min(x);
+% pi_pesi(posizione)=1;
+% 
+% %   Calcolo la combinazione di primitive.
+% for i=1:NUM_PRIMITIVE
+%     pi_f = pi_f + pi_pesi(i)*pi_base(i,x);
+% end
 
 %   Eseguo la pi_f e ricevo il reward e il corrispondente stato. Interfacciarsi con Nao
 %   [r,y] = Esegui(pi_f);
 
 
-%   Eseguo Nac per ogni policy pi_pesi(i). Il reward è pesato rispetto al
-%   peso effettivo che la primitiva motoria ha avuto nell'azione
-for i=1:NUM_PRIMITIVE
-[w(:,1),t(:,1),pi_pesi(i),z(:,i)]=Nac(w(:,i),t(:,i),pi_pesi(i),z(:,i),x,y,r*(pi_pesi(i)/sum(pi_pesi)));
-end 
+% %   Eseguo Nac per ogni policy pi_pesi(i). Il reward è pesato rispetto al
+% %   peso effettivo che la primitiva motoria ha avuto nell'azione
+% for i=1:NUM_PRIMITIVE
+% [w(:,1),t(:,1),pi_pesi(i),z(:,i)]=Nac(w(:,i),t(:,i),pi_pesi(i),z(:,i),x,y,r*(pi_pesi(i)/sum(pi_pesi)));
+% end 
+% 
+% %   Aggiorno lo stato
+% x=y;
 
-%   Aggiorno lo stato
-x=y;
-
-%   Iterazione fino a convergenza.
-while true
-    %   Calcolo la combinazione di primitive.
-    for i=1:NUM_PRIMITIVE
-        pi_f = pi_f + pi_pesi(i)*pi_base(i,x);
-    end
-
-    %   Eseguo la pi_f e ricevo il reward e il corrispondente stato. Interfacciarsi con Nao
-    %   [r,y] = Esegui(pi_f);
+% %   Iterazione fino a convergenza.
+% while true
+%     %   Calcolo la combinazione di primitive.
+%     for i=1:NUM_PRIMITIVE
+%         pi_f = pi_f + pi_pesi(i)*pi_base(i,x);
+%     end
+% 
+%     %   Eseguo la pi_f e ricevo il reward e il corrispondente stato. Interfacciarsi con Nao
+%     %   [r,y] = Esegui(pi_f);
 
 
     %   Eseguo Nac per ogni policy pi_pesi(i). Il reward è pesato rispetto al
-    %   peso effettivo che la primitiva motoria ha avuto nell'azione
+    %   peso effettivo che la primitiva motoria ha avuto nell'azione.
     for i=1:NUM_PRIMITIVE
-        [w(:,1),t(:,1),pi_pesi(i),z(:,i)]=Nac(w(:,i),t(:,i),pi_pesi(i),z(:,i),x,y,r*(pi_pesi(i)/sum(pi_pesi)));
+        [w(:,i),t(:,i),pi_pesi(i),z(:,i)]=Nac(w(:,i),t(:,i),pi_pesi(i),z(:,i),x,y,r*(pi_pesi(i)/sum(pi_pesi)));
     end
     
-    %   Aggiorno lo stato
-    x=y;
-end
+%     %   Aggiorno lo stato
+%     x=y;
+% end
 
 
 
