@@ -24,10 +24,12 @@ function [ t,z ] = sarsa_critic( x,a,r,y,a1,t,z,w )
 %
 
 %   Inizializzazioni
-g=0.9; % Valuto la policy quindi sono nell'area dei gangli con discount alto.
-%   g=0;  Valuto il goal quindi sono nell'area dei gangli con discount basso.
+%g=0.9; % Valuto la policy quindi sono nell'area dei gangli con discount alto.
+
 l=1; % Implemento Td(1), comportamente stile MonteCarlo. 
-alpha=0.2; %trovare un parametro giusto. 
+alpha=0.85;
+
+g=0; %caso esperimento pallina è episodico
 
 %   Calcolo l'errore td
 phi = basis_critic(x,a,w);
@@ -36,7 +38,6 @@ d = r + g*(t'*basis_critic(y,a1,w)) - t'*phi;
 z = phi + g*l*z;
 %   Calcolo i parametri aggiornati della Action-Value function
 t = t + alpha*d*z;
-
 
 
 end

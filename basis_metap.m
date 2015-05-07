@@ -47,12 +47,5 @@ for j=1:m
 end
 
 
-% %   Il calcolo lo eseguo nella funzione chiamante.
-% %   Calcolo il valore delle basis function
-% ris=zeros(n^m);
-% for k=1:n^m
-%     ris(k,1) = mvnpdf(x',mu(k,:),SIGMA);
-% end
-
 end
 

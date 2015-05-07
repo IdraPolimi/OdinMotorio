@@ -1,9 +1,10 @@
-function [ g ] = get_goal( id )
+function [ g ] = get_goal( ID )
 %GET_GOAL Summary of this function goes here
 %   Detailed explanation goes here
 
-infos = dcp('Structure',id);
-g = infos.g;
+global dcps
+
+g=[dcps(ID(1)).G, dcps(ID(2)).G, dcps(ID(3)).G, dcps(ID(4)).G];
 
 end
 

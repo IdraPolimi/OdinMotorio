@@ -32,6 +32,10 @@ function [ t,a_f ] = metap_learning( s,c,r,t )
 global NUM_BASIS_METAP
 global MU_METAP
 global SIGMA_METAP
+global DOF
+global R_ANG
+global R_CAR
+global check
 
 %   Inizializzazioni
 
@@ -62,9 +66,37 @@ for k=1:NUM_BASIS_METAP
 end
 
 %   Aggiorno i parametri della funzione v
-t = t + n*(r*ones(size(t),1) - t).*(basis_m./sum(basis_m));
+%   sto facendo gradient descent ora
+delta=r*ones(size(t,1),1) - t;
+t = t + 0.8*(delta).*(basis_m./sum(basis_m));
 
-%   Calcolo i nuovi metaparametri
-a_f = (1/(1+c))*(basis_m./sum(basis_m)+c*s_i);
+%   Calcolo il gradiente della funzione v nello stato corrente
+gradV=zeros(DOF,1);
+termine1=zeros(DOF,1);
+termine2=zeros(DOF,1);
+termine3=zeros(DOF,1);
+for k=3:DOF
+    for i=1:NUM_BASIS_METAP
+        termine1(k,1)=termine1(k,1)+basis_m(i,1)*2*(s(k)-MU_METAP(i,1));
+    end
+end
+
+
+for i=3:DOF
+    for k=1:NUM_BASIS_METAP
+        gradV(i,1)=gradV(i,1)+t(k,1)*basis_m(k,1)*2*(s(i)-MU_METAP(i,1))*sum(basis_m)-basis_m(k,1)*termine1(i,1);
+        gradV(i,1)=gradV(i,1)/(sum(basis_m)^2);
+    end
+end
+
+% if(check>10)
+% %   Calcolo i nuovi metaparametri
+% %a_f = (1/(1+c))*(-1*0.8*gradV+c*s_i);
+%     a_f = -check*0.1*gradV+s_i;
+% else
+%     a_f=s_i;
+% end
+
+
 end
 

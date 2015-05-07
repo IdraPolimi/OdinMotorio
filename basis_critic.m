@@ -1,4 +1,4 @@
-function [ f ] = basis_critic( x,a,teta )
+function [ f ] = basis_critic( x,a,w )
 %BASIS Calcola il vettore delle features per una coppia stato-azione
 
 %   variabili
@@ -11,15 +11,12 @@ function [ f ] = basis_critic( x,a,teta )
 
 global NUM_PRIMITIVE
 
-sigma=1; %Inizializzarla nella maniera più opportuna
-
+sigma=0.2; %Inizializzarla come quella policy
 f = zeros(NUM_PRIMITIVE,1);
 basis = basis_actor(x);
 for i=1:NUM_PRIMITIVE
-    f(i) = (a-teta'*basis)*basis(i)/(sigma^2);
+    f(i) = (a-w'*basis)*basis(i)/(sigma^2);
 end
-
-
 
 end
 

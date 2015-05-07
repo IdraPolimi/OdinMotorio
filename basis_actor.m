@@ -20,7 +20,10 @@ global SIGMA_ACTOR
     f = zeros(NUM_PRIMITIVE,1);
 for i=1:NUM_PRIMITIVE
     f(i,1) = mvnpdf(x',MU_ACTOR(i,:),SIGMA_ACTOR);
+    %   Caso con SIGMA=1
+    %f(i,1) = mvnpdf(x',MU_ACTOR(i,:));
 end
+
 
 
 end
